@@ -11,13 +11,21 @@ function App() {
   });
 
   const wingRarityData = {
-    scarce: { value: 6, name: 'Scarce' },
-    epic: { value: 7, name: 'Epic' },
-    legendary: { value: 8, name: 'Legendary' },
-    immortal: { value: 9, name: 'Immortal' },
-    myth: { value: 10, name: 'Myth' },
-    eternal: { value: 11, name: 'Eternal' },
-    celestial: { value: 12, name: 'Celestial' }
+    scarce: { value: 6, name: 'Scarce', color: 'from-purple-500 to-purple-600' },
+    epic: { value: 7, name: 'Epic', color: 'from-amber-500 to-amber-600' },
+    legendary: { value: 8, name: 'Legendary', color: 'from-pink-500 to-pink-600' },
+    immortal: { value: 9, name: 'Immortal', color: 'from-red-500 to-red-600' },
+    myth: { value: 10, name: 'Myth', color: 'from-orange-500 to-orange-600' },
+    eternal: { value: 11, name: 'Eternal', color: 'from-yellow-500 to-yellow-600' },
+    celestial: { value: 12, name: 'Celestial', color: 'from-cyan-500 to-cyan-600' }
+  };
+
+  const maxCoefficients = {
+    ATBM: 1.500,
+    DTM: 1.200,
+    DTP: 1.050,
+    HPBM: 1.500,
+    Speed: 0.900
   };
 
   const WING_LEVEL_MULTIPLIER = 0.0000555555555555556;
@@ -89,20 +97,7 @@ function App() {
       { name: 'Talisman Damage', id: 'talisman', isPercentage: true, decimals: 3 },
       { name: 'HP', id: 'hp', isPercentage: false },
       { name: 'Skill Damage', id: 'skill', isPercentage: true, decimals: 3 }
-    ],
-    colors: {
-      common: { bg: '#f3f4f6', text: '#374151', border: '#d1d5db' },
-      good: { bg: '#dcfce7', text: '#166534', border: '#bbf7d0' },
-      sturdy: { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe' },
-      rare: { bg: '#f0fdf4', text: '#15803d', border: '#dcfce7' },
-      perfect: { bg: '#eff6ff', text: '#1d4ed8', border: '#dbeafe' },
-      scarce: { bg: '#faf5ff', text: '#7e22ce', border: '#e9d5ff' },
-      epic: { bg: '#fef3c7', text: '#92400e', border: '#fde68a' },
-      legendary: { bg: '#fce7f3', text: '#be185d', border: '#fbcfe8' },
-      immortal: { bg: '#ffe4e6', text: '#be123c', border: '#fecdd3' },
-      myth: { bg: '#ffedd5', text: '#9a3412', border: '#fed7aa' },
-      eternal: { bg: '#fef9c3', text: '#854d0e', border: '#fef08a' }
-    }
+    ]
   };
 
   const elixirAbsorbData = {
@@ -263,17 +258,25 @@ function App() {
   const availableWorlds = worldData[worldInputs.difficulty] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white text-gray-800 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white text-slate-800 font-sans">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Cultivation Tools</h1>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">CN</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">Code Name Blue</h1>
+                <p className="text-sm text-slate-600">Calculator</p>
+              </div>
+            </div>
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
             >
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -283,10 +286,10 @@ function App() {
 
       <div className="container mx-auto flex">
         {/* Sidebar */}
-        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-xl lg:shadow-none transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300`}>
+        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-xl lg:shadow-none transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 border-r border-slate-200`}>
           <div className="p-6 h-full overflow-y-auto">
-            <nav className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Tools</h3>
+            <nav className="space-y-1">
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Tools</h3>
               
               {[
                 { id: 'wing-calculator', name: 'Wing Calculator', icon: '🪽' },
@@ -296,15 +299,33 @@ function App() {
                 <button
                   key={item.id}
                   onClick={() => { setActivePage(item.id); setSidebarOpen(false); }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                  className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
                     activePage === item.id 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
                   }`}
                 >
                   <span className="text-xl">{item.icon}</span>
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium text-sm">{item.name}</span>
                 </button>
+              ))}
+
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-8 mb-4">Social Links</h3>
+              
+              {[
+                { name: 'Roblox Game', icon: '🎮', url: 'https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal' },
+                { name: 'Discord Server', icon: '💬', url: 'https://discord.com/invite/gFgcEavupb' }
+              ].map((item) => (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition-all duration-200"
+                >
+                  <span className="text-xl">{item.icon}</span>
+                  <span className="font-medium text-sm">{item.name}</span>
+                </a>
               ))}
             </nav>
           </div>
@@ -319,122 +340,144 @@ function App() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:p-8">
+        <main className="flex-1 p-4 lg:p-6">
           
           {/* Wing Calculator */}
           {activePage === 'wing-calculator' && (
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">Wing Calculator</h1>
-                <p className="text-gray-600 text-lg">ATBM & Coefficient Wing Calculator</p>
+                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">Wing Calculator</h1>
+                <p className="text-slate-600">ATBM & Coefficient Wing Calculator</p>
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                {/* Coefficient Calculator */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-200">
-                    1. Wing Coefficient Calculation
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Wing Percentage (%)</label>
-                      <input 
-                        type="number" 
-                        value={wingInputs.coeff.percent}
-                        onChange={(e) => handleWingInputChange('coeff', 'percent', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                        step="0.001"
-                        placeholder="7.521"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Level</label>
-                      <input 
-                        type="number" 
-                        value={wingInputs.coeff.level}
-                        onChange={(e) => handleWingInputChange('coeff', 'level', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                        placeholder="722"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Rarity Wing</label>
-                      <select 
-                        value={wingInputs.coeff.rarity}
-                        onChange={(e) => handleWingInputChange('coeff', 'rarity', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                      >
-                        {Object.entries(wingRarityData).map(([key, data]) => (
-                          <option key={key} value={key}>{data.name}</option>
-                        ))}
-                      </select>
-                    </div>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8">
+                <div className="flex items-start space-x-3">
+                  <div className="text-yellow-600 mt-0.5">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                   </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-yellow-800 font-medium">Best way to get accurate stats of scarce wing is to trade wing to low level alts as it would give 3 decimal instead of 1 decimal</p>
+                  </div>
+                </div>
+              </div>
 
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Result:</h3>
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-md">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium text-lg">Wing Coefficient</span>
-                        <span className="text-2xl font-bold font-mono">{wingResults.coefficient.toFixed(5)}</span>
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+                {/* Max Coefficients Panel */}
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h2 className="text-lg font-bold text-slate-900 mb-4">Max Wing Coefficients</h2>
+                  <div className="space-y-3">
+                    {Object.entries(maxCoefficients).map(([stat, value]) => (
+                      <div key={stat} className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <span className="font-medium text-slate-700 text-sm">{stat}</span>
+                        <span className="font-bold text-slate-900 font-mono">{value.toFixed(3)}</span>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* ATBM Calculator */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-200">
-                    2. Wing Percentage Calculation
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Wing Coefficient</label>
-                      <input 
-                        type="number" 
-                        value={wingInputs.atbm.coeff}
-                        onChange={(e) => handleWingInputChange('atbm', 'coeff', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                        step="0.00001"
-                        placeholder="0.85034"
-                      />
+                <div className="xl:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Coefficient Calculator */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 className="text-lg font-bold text-slate-900 mb-4">Wing Coefficient Calculation</h2>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Wing Percentage (%)</label>
+                        <input 
+                          type="number" 
+                          value={wingInputs.coeff.percent}
+                          onChange={(e) => handleWingInputChange('coeff', 'percent', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          step="0.001"
+                          placeholder="7.521"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Level</label>
+                        <input 
+                          type="number" 
+                          value={wingInputs.coeff.level}
+                          onChange={(e) => handleWingInputChange('coeff', 'level', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          placeholder="722"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Rarity Wing</label>
+                        <select 
+                          value={wingInputs.coeff.rarity}
+                          onChange={(e) => handleWingInputChange('coeff', 'rarity', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                        >
+                          {Object.entries(wingRarityData).map(([key, data]) => (
+                            <option key={key} value={key}>{data.name}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Level</label>
-                      <input 
-                        type="number" 
-                        value={wingInputs.atbm.level}
-                        onChange={(e) => handleWingInputChange('atbm', 'level', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                        placeholder="722"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Rarity Wing</label>
-                      <select 
-                        value={wingInputs.atbm.rarity}
-                        onChange={(e) => handleWingInputChange('atbm', 'rarity', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                      >
-                        {Object.entries(wingRarityData).map(([key, data]) => (
-                          <option key={key} value={key}>{data.name}</option>
-                        ))}
-                      </select>
+                    <div className="mt-6 pt-4 border-t border-slate-200">
+                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg shadow-sm">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-sm">Wing Coefficient</span>
+                          <span className="text-lg font-bold font-mono">{wingResults.coefficient.toFixed(5)}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Result:</h3>
-                    <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-md">
-                      <div className="flex justify-between items-center">
-                        <span className="font-medium text-lg">Final Wing Percentage</span>
-                        <span className="text-2xl font-bold font-mono">{wingResults.atbm.toFixed(3)}%</span>
+                  {/* ATBM Calculator */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h2 className="text-lg font-bold text-slate-900 mb-4">Wing Percentage Calculation</h2>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Wing Coefficient</label>
+                        <input 
+                          type="number" 
+                          value={wingInputs.atbm.coeff}
+                          onChange={(e) => handleWingInputChange('atbm', 'coeff', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          step="0.00001"
+                          placeholder="0.85034"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Level</label>
+                        <input 
+                          type="number" 
+                          value={wingInputs.atbm.level}
+                          onChange={(e) => handleWingInputChange('atbm', 'level', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          placeholder="722"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Rarity Wing</label>
+                        <select 
+                          value={wingInputs.atbm.rarity}
+                          onChange={(e) => handleWingInputChange('atbm', 'rarity', e.target.value)}
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                        >
+                          {Object.entries(wingRarityData).map(([key, data]) => (
+                            <option key={key} value={key}>{data.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-200">
+                      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg shadow-sm">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-sm">Final Wing Percentage</span>
+                          <span className="text-lg font-bold font-mono">{wingResults.atbm.toFixed(3)}%</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -447,20 +490,53 @@ function App() {
           {activePage === 'elixir-calculator' && (
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">Elixir Calculator</h1>
-                <p className="text-gray-600 text-lg">Calculate total points and stats from your elixirs</p>
+                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">Elixir Calculator</h1>
+                <p className="text-slate-600">Calculate total points and stats from your elixirs</p>
               </div>
 
               {/* Rarity Checkboxes */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Select Rarities</h3>
-                <div className="flex flex-wrap gap-3">
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Select Rarities</h3>
+                <div className="flex flex-wrap gap-2">
                   {elixirData.rarities.map(rarity => (
-                    <label key={rarity.id} className="flex items-center space-x-2 px-4 py-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all"
+                    <label key={rarity.id} className="flex items-center space-x-2 px-3 py-2 rounded-lg border-2 cursor-pointer hover:shadow-sm transition-all text-sm font-medium"
                       style={{
-                        backgroundColor: elixirChecked[rarity.id] ? elixirData.colors[rarity.id].bg : 'white',
-                        borderColor: elixirChecked[rarity.id] ? elixirData.colors[rarity.id].border : '#e5e7eb',
-                        color: elixirData.colors[rarity.id].text
+                        backgroundColor: elixirChecked[rarity.id] ? 
+                          (rarity.id === 'common' ? '#f3f4f6' : 
+                           rarity.id === 'good' ? '#dcfce7' :
+                           rarity.id === 'sturdy' ? '#dbeafe' :
+                           rarity.id === 'rare' ? '#f0fdf4' :
+                           rarity.id === 'perfect' ? '#eff6ff' :
+                           rarity.id === 'scarce' ? '#faf5ff' :
+                           rarity.id === 'epic' ? '#fef3c7' :
+                           rarity.id === 'legendary' ? '#fce7f3' :
+                           rarity.id === 'immortal' ? '#ffe4e6' :
+                           rarity.id === 'myth' ? '#ffedd5' :
+                           '#fef9c3') : 'white',
+                        borderColor: elixirChecked[rarity.id] ? 
+                          (rarity.id === 'common' ? '#d1d5db' : 
+                           rarity.id === 'good' ? '#bbf7d0' :
+                           rarity.id === 'sturdy' ? '#bfdbfe' :
+                           rarity.id === 'rare' ? '#dcfce7' :
+                           rarity.id === 'perfect' ? '#dbeafe' :
+                           rarity.id === 'scarce' ? '#e9d5ff' :
+                           rarity.id === 'epic' ? '#fde68a' :
+                           rarity.id === 'legendary' ? '#fbcfe8' :
+                           rarity.id === 'immortal' ? '#fecdd3' :
+                           rarity.id === 'myth' ? '#fed7aa' :
+                           '#fef08a') : '#e5e7eb',
+                        color: elixirChecked[rarity.id] ? 
+                          (rarity.id === 'common' ? '#374151' : 
+                           rarity.id === 'good' ? '#166534' :
+                           rarity.id === 'sturdy' ? '#1e40af' :
+                           rarity.id === 'rare' ? '#15803d' :
+                           rarity.id === 'perfect' ? '#1d4ed8' :
+                           rarity.id === 'scarce' ? '#7e22ce' :
+                           rarity.id === 'epic' ? '#92400e' :
+                           rarity.id === 'legendary' ? '#be185d' :
+                           rarity.id === 'immortal' ? '#be123c' :
+                           rarity.id === 'myth' ? '#9a3412' :
+                           '#854d0e') : '#6b7280'
                       }}
                     >
                       <input
@@ -469,37 +545,59 @@ function App() {
                         onChange={(e) => handleElixirCheckChange(rarity.id, e.target.checked)}
                         className="rounded text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="font-medium">{rarity.name}</span>
+                      <span>{rarity.name}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
               {/* Elixir Input Sections */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {elixirData.rarities.map(rarity => (
                   <div 
                     key={rarity.id} 
-                    className={`bg-white rounded-2xl shadow-lg p-8 border-2 transition-all duration-300 ${
+                    className={`bg-white rounded-2xl shadow-sm border-2 p-6 transition-all duration-300 ${
                       !elixirChecked[rarity.id] ? 'opacity-40' : ''
                     }`}
                     style={{
-                      borderColor: elixirData.colors[rarity.id].border
+                      borderColor: rarity.id === 'common' ? '#d1d5db' : 
+                                  rarity.id === 'good' ? '#bbf7d0' :
+                                  rarity.id === 'sturdy' ? '#bfdbfe' :
+                                  rarity.id === 'rare' ? '#dcfce7' :
+                                  rarity.id === 'perfect' ? '#dbeafe' :
+                                  rarity.id === 'scarce' ? '#e9d5ff' :
+                                  rarity.id === 'epic' ? '#fde68a' :
+                                  rarity.id === 'legendary' ? '#fbcfe8' :
+                                  rarity.id === 'immortal' ? '#fecdd3' :
+                                  rarity.id === 'myth' ? '#fed7aa' :
+                                  '#fef08a'
                     }}
                   >
-                    <h4 className="text-xl font-bold mb-6 pb-4 border-b border-gray-200" style={{color: elixirData.colors[rarity.id].text}}>
+                    <h4 className="text-lg font-bold mb-4 pb-3 border-b border-slate-200" style={{
+                      color: rarity.id === 'common' ? '#374151' : 
+                            rarity.id === 'good' ? '#166534' :
+                            rarity.id === 'sturdy' ? '#1e40af' :
+                            rarity.id === 'rare' ? '#15803d' :
+                            rarity.id === 'perfect' ? '#1d4ed8' :
+                            rarity.id === 'scarce' ? '#7e22ce' :
+                            rarity.id === 'epic' ? '#92400e' :
+                            rarity.id === 'legendary' ? '#be185d' :
+                            rarity.id === 'immortal' ? '#be123c' :
+                            rarity.id === 'myth' ? '#9a3412' :
+                            '#854d0e'
+                    }}>
                       {rarity.name} Elixirs
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                       {elixirData.stats.map(stat => (
                         <div key={stat.id}>
-                          <label className="block text-sm font-medium text-gray-700 mb-3">{stat.name}</label>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">{stat.name}</label>
                           <input
                             type="number"
                             value={elixirQuantities[`${rarity.id}-${stat.id}`] || ''}
                             onChange={(e) => handleElixirQuantityChange(rarity.id, stat.id, e.target.value)}
                             disabled={!elixirChecked[rarity.id]}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed transition-all"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed transition-all text-sm"
                             min="0"
                             placeholder="0"
                           />
@@ -511,27 +609,27 @@ function App() {
               </div>
 
               {/* Totals */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 {/* Points Total */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Total Points</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Total Points</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {elixirData.stats.map(stat => (
                       <div key={stat.id} className="text-center">
-                        <div className="text-sm text-gray-600 mb-2">{stat.name}</div>
-                        <div className="text-2xl font-bold text-blue-600">{formatStatNumber(pointTotals[stat.id] || 0)}</div>
+                        <div className="text-sm text-slate-600 mb-2">{stat.name}</div>
+                        <div className="text-xl font-bold text-blue-600">{formatStatNumber(pointTotals[stat.id] || 0)}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Absorb Stats Total */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Total Absorb Stats</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Total Absorb Stats</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {elixirData.stats.map(stat => (
                       <div key={stat.id} className="text-center">
-                        <div className="text-sm text-gray-600 mb-2">{stat.name}</div>
+                        <div className="text-sm text-slate-600 mb-2">{stat.name}</div>
                         <div className="text-lg font-bold text-green-600">
                           {stat.isPercentage 
                             ? `${((absorbTotals[stat.id] || 0)).toFixed(stat.decimals)}%`
@@ -550,21 +648,21 @@ function App() {
           {activePage === 'world-calculator' && (
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">World Rate Calculator</h1>
-                <p className="text-gray-600 text-lg">Calculate your farming rate per hour</p>
+                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">World Rate Calculator</h1>
+                <p className="text-slate-600">Calculate your farming rate per hour</p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {/* World Selection */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">World Selection</h3>
-                  <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">World Selection</h3>
+                  <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Difficulty</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">Difficulty</label>
                       <select 
                         value={worldInputs.difficulty}
                         onChange={(e) => handleWorldInputChange('difficulty', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                        className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
                       >
                         {Object.keys(worldData).map(difficulty => (
                           <option key={difficulty} value={difficulty}>{difficulty}</option>
@@ -572,11 +670,11 @@ function App() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">World</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">World</label>
                       <select 
                         value={worldInputs.world}
                         onChange={(e) => handleWorldInputChange('world', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                        className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
                       >
                         {availableWorlds.map(world => (
                           <option key={world.id} value={world.id}>{world.name}</option>
@@ -587,34 +685,34 @@ function App() {
                 </div>
 
                 {/* Base Stats */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Base Stats</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="font-medium text-gray-700">Exp / Clear</span>
-                      <span className="font-bold text-gray-900 text-lg">{worldResults.baseStats.xp.toLocaleString('id-ID')}</span>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Base Stats</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
+                      <span className="font-medium text-slate-700 text-sm">Exp / Clear</span>
+                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.xp.toLocaleString('id-ID')}</span>
                     </div>
-                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="font-medium text-gray-700">Ore / Drop</span>
-                      <span className="font-bold text-gray-900 text-lg">{worldResults.baseStats.ore.toLocaleString('id-ID')}</span>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
+                      <span className="font-medium text-slate-700 text-sm">Ore / Drop</span>
+                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.ore.toLocaleString('id-ID')}</span>
                     </div>
-                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-200">
-                      <span className="font-medium text-gray-700">Gold / Clear</span>
-                      <span className="font-bold text-gray-900 text-lg">{worldResults.baseStats.coins.toLocaleString('id-ID')}</span>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
+                      <span className="font-medium text-slate-700 text-sm">Gold / Clear</span>
+                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.coins.toLocaleString('id-ID')}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Clear Time */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Clear Time</h3>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Clear Time</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Clear Time (seconds)</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Clear Time (seconds)</label>
                     <input
                       type="number"
                       value={worldInputs.clearTime}
                       onChange={(e) => handleWorldInputChange('clearTime', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
                       min="0"
                       placeholder="60"
                     />
@@ -622,21 +720,21 @@ function App() {
                 </div>
 
                 {/* Drop Buff Adjustment */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Drop Buff Adjustment</h3>
-                  <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Drop Buff Adjustment</h3>
+                  <div className="space-y-4">
                     {[
                       { id: 'goldDropRate', label: 'Gold Drop Rate (%)', min: 100 },
                       { id: 'oreDropRate', label: 'Ore Drop Rate (%)', min: 100 },
                       { id: 'expGainRate', label: 'Exp Gain Rate (%)', min: 100 }
                     ].map(field => (
                       <div key={field.id}>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">{field.label}</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{field.label}</label>
                         <input
                           type="number"
                           value={worldInputs[field.id]}
                           onChange={(e) => handleWorldInputChange(field.id, e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
                           min={field.min}
                         />
                       </div>
@@ -645,20 +743,20 @@ function App() {
                 </div>
 
                 {/* Extra Drop Adjustment */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">Extra Drop Adjustment</h3>
-                  <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">Extra Drop Adjustment</h3>
+                  <div className="space-y-4">
                     {[
                       { id: 'goldExtraDrop', label: 'Extra Gold Drop' },
                       { id: 'expExtraDrop', label: 'Extra Exp Drop' }
                     ].map(field => (
                       <div key={field.id}>
-                        <label className="block text-sm font-medium text-gray-700 mb-3">{field.label}</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{field.label}</label>
                         <input
                           type="number"
                           value={worldInputs[field.id]}
                           onChange={(e) => handleWorldInputChange(field.id, e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
                           min="0"
                           placeholder="0"
                         />
@@ -668,23 +766,23 @@ function App() {
                 </div>
 
                 {/* Results */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-8 text-white">
-                  <h3 className="text-xl font-bold mb-6">Results Per Hour</h3>
-                  <div className="space-y-4">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-sm p-6 text-white">
+                  <h3 className="text-lg font-bold mb-4">Results Per Hour</h3>
+                  <div className="space-y-3">
                     {[
                       { label: 'Exp / Hour', value: worldResults.xpHour.toLocaleString('id-ID'), color: 'text-green-200' },
                       { label: 'Ore / Hour', value: worldResults.oreHour.toLocaleString('id-ID'), color: 'text-yellow-200' },
                       { label: 'Gold / Hour', value: worldResults.coinsHour.toLocaleString('id-ID'), color: 'text-yellow-200' },
                       { label: 'Clears / Hour', value: worldResults.clearsHour, color: 'text-blue-200' }
                     ].map((item, index) => (
-                      <div key={index} className="flex justify-between items-center py-2">
-                        <span className="font-medium">{item.label}</span>
-                        <span className={`text-lg font-bold font-mono ${item.color}`}>{item.value}</span>
+                      <div key={index} className="flex justify-between items-center py-1">
+                        <span className="font-medium text-sm">{item.label}</span>
+                        <span className={`text-base font-bold font-mono ${item.color}`}>{item.value}</span>
                       </div>
                     ))}
                     <button 
                       onClick={addToCompare}
-                      className="w-full mt-6 bg-white text-blue-600 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-md"
+                      className="w-full mt-4 bg-white text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-sm text-sm"
                     >
                       Add to Compare
                     </button>
@@ -694,37 +792,37 @@ function App() {
 
               {/* Comparison Table */}
               {comparisonData.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-lg p-8 mt-8 border border-gray-200">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900">World Comparison</h3>
+                <div className="bg-white rounded-2xl shadow-sm p-6 mt-6 border border-slate-200">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold text-slate-900">World Comparison</h3>
                     <button 
                       onClick={clearCompare}
-                      className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-medium shadow-md"
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium shadow-sm text-sm"
                     >
                       Clear All
                     </button>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b-2 border-gray-200">
-                          <th className="text-left py-4 font-semibold text-gray-700">World</th>
-                          <th className="text-left py-4 font-semibold text-gray-700">Exp/Hour</th>
-                          <th className="text-left py-4 font-semibold text-gray-700">Ore/Hour</th>
-                          <th className="text-left py-4 font-semibold text-gray-700">Gold/Hour</th>
-                          <th className="text-left py-4 font-semibold text-gray-700">Clears/Hour</th>
-                          <th className="text-left py-4 font-semibold text-gray-700">Clear Time</th>
+                        <tr className="border-b-2 border-slate-200">
+                          <th className="text-left py-3 font-semibold text-slate-700">World</th>
+                          <th className="text-left py-3 font-semibold text-slate-700">Exp/Hour</th>
+                          <th className="text-left py-3 font-semibold text-slate-700">Ore/Hour</th>
+                          <th className="text-left py-3 font-semibold text-slate-700">Gold/Hour</th>
+                          <th className="text-left py-3 font-semibold text-slate-700">Clears/Hour</th>
+                          <th className="text-left py-3 font-semibold text-slate-700">Clear Time</th>
                         </tr>
                       </thead>
                       <tbody>
                         {comparisonData.map((data, index) => (
-                          <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td className="py-4 text-gray-900 font-medium">{data.name}</td>
-                            <td className="py-4 font-mono text-gray-700">{data.xp.toLocaleString('id-ID')}</td>
-                            <td className="py-4 font-mono text-gray-700">{data.ore.toLocaleString('id-ID')}</td>
-                            <td className="py-4 font-mono text-gray-700">{data.coins.toLocaleString('id-ID')}</td>
-                            <td className="py-4 font-mono text-gray-700">{data.clears}</td>
-                            <td className="py-4 font-mono text-gray-700">{data.clearTime}s</td>
+                          <tr key={index} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td className="py-3 text-slate-900 font-medium">{data.name}</td>
+                            <td className="py-3 font-mono text-slate-700">{data.xp.toLocaleString('id-ID')}</td>
+                            <td className="py-3 font-mono text-slate-700">{data.ore.toLocaleString('id-ID')}</td>
+                            <td className="py-3 font-mono text-slate-700">{data.coins.toLocaleString('id-ID')}</td>
+                            <td className="py-3 font-mono text-slate-700">{data.clears}</td>
+                            <td className="py-3 font-mono text-slate-700">{data.clearTime}s</td>
                           </tr>
                         ))}
                       </tbody>
