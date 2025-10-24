@@ -1,4 +1,25 @@
 import { useState, useEffect } from 'react';
+import { 
+  Menu, 
+  AlertCircle, 
+  Calculator, 
+  FlaskConical, 
+  Globe, 
+  Gamepad2, 
+  MessageCircle,
+  X,
+  TrendingUp,
+  BarChart3,
+  Clock,
+  Coins,
+  Gem,
+  Zap,
+  Heart,
+  Sword,
+  Shield,
+  Sparkles,
+  ChevronDown
+} from 'lucide-react';
 
 function App() {
   const [activePage, setActivePage] = useState('wing-calculator');
@@ -79,24 +100,24 @@ function App() {
 
   const elixirData = {
     rarities: [
-      { name: 'Common', value: 1, id: 'common', defaultChecked: true },
-      { name: 'Good', value: 2, id: 'good', defaultChecked: true },
-      { name: 'Sturdy', value: 3, id: 'sturdy', defaultChecked: false },
-      { name: 'Rare', value: 4, id: 'rare', defaultChecked: false },
-      { name: 'Perfect', value: 5, id: 'perfect', defaultChecked: false },
-      { name: 'Scarce', value: 6, id: 'scarce', defaultChecked: false },
-      { name: 'Epic', value: 8, id: 'epic', defaultChecked: false },
-      { name: 'Legendary', value: 10, id: 'legendary', defaultChecked: false },
-      { name: 'Immortal', value: 14, id: 'immortal', defaultChecked: false },
-      { name: 'Myth', value: 20, id: 'myth', defaultChecked: false },
-      { name: 'Eternal', value: 28, id: 'eternal', defaultChecked: false }
+      { name: 'Common', value: 1, id: 'common', defaultChecked: true, color: '#9ca3af' },
+      { name: 'Good', value: 2, id: 'good', defaultChecked: true, color: '#22c55e' },
+      { name: 'Sturdy', value: 3, id: 'sturdy', defaultChecked: false, color: '#06b6d4' },
+      { name: 'Rare', value: 4, id: 'rare', defaultChecked: false, color: '#10b981' },
+      { name: 'Perfect', value: 5, id: 'perfect', defaultChecked: false, color: '#3b82f6' },
+      { name: 'Scarce', value: 6, id: 'scarce', defaultChecked: false, color: '#a855f7' },
+      { name: 'Epic', value: 8, id: 'epic', defaultChecked: false, color: '#f59e0b' },
+      { name: 'Legendary', value: 10, id: 'legendary', defaultChecked: false, color: '#ec4899' },
+      { name: 'Immortal', value: 14, id: 'immortal', defaultChecked: false, color: '#ef4444' },
+      { name: 'Myth', value: 20, id: 'myth', defaultChecked: false, color: '#f97316' },
+      { name: 'Eternal', value: 28, id: 'eternal', defaultChecked: false, color: '#eab308' }
     ],
     stats: [
-      { name: 'Attack', id: 'attack', isPercentage: false },
-      { name: 'Critical Hit Damage', id: 'crit', isPercentage: true, decimals: 2 },
-      { name: 'Talisman Damage', id: 'talisman', isPercentage: true, decimals: 3 },
-      { name: 'HP', id: 'hp', isPercentage: false },
-      { name: 'Skill Damage', id: 'skill', isPercentage: true, decimals: 3 }
+      { name: 'Attack', id: 'attack', isPercentage: false, icon: Sword },
+      { name: 'Critical Hit Damage', id: 'crit', isPercentage: true, decimals: 2, icon: Zap },
+      { name: 'Talisman Damage', id: 'talisman', isPercentage: true, decimals: 3, icon: Sparkles },
+      { name: 'HP', id: 'hp', isPercentage: false, icon: Heart },
+      { name: 'Skill Damage', id: 'skill', isPercentage: true, decimals: 3, icon: Shield }
     ]
   };
 
@@ -182,8 +203,8 @@ function App() {
     goldDropRate: '100',
     oreDropRate: '100',
     expGainRate: '100',
-    goldExtraDrop: '',
-    expExtraDrop: ''
+    goldExtraDrop: '0',
+    expExtraDrop: '0'
   });
   const [comparisonData, setComparisonData] = useState([]);
 
@@ -203,12 +224,12 @@ function App() {
     const stats = worldStats[worldInputs.world];
     if (!stats) return { xpHour: 0, oreHour: 0, coinsHour: 0, clearsHour: 0, baseStats: { xp: 0, ore: 0, coins: 0 } };
 
-    const expGainRate = (parseInt(worldInputs.expGainRate) || 100) / 100;
-    const oreDropRate = (parseInt(worldInputs.oreDropRate) || 100) / 100;
-    const goldDropRate = (parseInt(worldInputs.goldDropRate) || 100) / 100;
-    const expExtraDrop = parseInt(worldInputs.expExtraDrop) || 0;
-    const goldExtraDrop = parseInt(worldInputs.goldExtraDrop) || 0;
-    const clearTime = parseInt(worldInputs.clearTime) || 0;
+    const expGainRate = (parseFloat(worldInputs.expGainRate) || 100) / 100;
+    const oreDropRate = (parseFloat(worldInputs.oreDropRate) || 100) / 100;
+    const goldDropRate = (parseFloat(worldInputs.goldDropRate) || 100) / 100;
+    const expExtraDrop = parseFloat(worldInputs.expExtraDrop) || 0;
+    const goldExtraDrop = parseFloat(worldInputs.goldExtraDrop) || 0;
+    const clearTime = parseFloat(worldInputs.clearTime) || 0;
 
     const timeFactor = clearTime > 0 ? 3600 / (clearTime + 5) : 0;
     
@@ -245,10 +266,14 @@ function App() {
       ore: worldResults.oreHour,
       coins: worldResults.coinsHour,
       clears: worldResults.clearsHour,
-      clearTime: parseInt(worldInputs.clearTime) || 0,
+      clearTime: parseFloat(worldInputs.clearTime) || 0,
     };
 
     setComparisonData(prev => [...prev, newComparison]);
+  };
+
+  const removeFromCompare = (index) => {
+    setComparisonData(prev => prev.filter((_, i) => i !== index));
   };
 
   const clearCompare = () => {
@@ -258,27 +283,25 @@ function App() {
   const availableWorlds = worldData[worldInputs.difficulty] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white text-slate-800 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 font-sans">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-slate-900/80 backdrop-blur-lg shadow-lg border-b border-slate-700/60 sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-lg">CN</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Code Name Blue</h1>
-                <p className="text-sm text-slate-600">Calculator</p>
+                <h1 className="text-xl font-bold text-white">Code Name Blue</h1>
+                <p className="text-sm text-slate-400">Calculator</p>
               </div>
             </div>
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              className="lg:hidden p-2 rounded-xl hover:bg-slate-800 transition-all duration-200 shadow-sm border border-slate-700"
             >
-              <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              {sidebarOpen ? <X className="w-6 h-6 text-slate-300" /> : <Menu className="w-6 h-6 text-slate-300" />}
             </button>
           </div>
         </div>
@@ -286,26 +309,26 @@ function App() {
 
       <div className="container mx-auto flex">
         {/* Sidebar */}
-        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-xl lg:shadow-none transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 border-r border-slate-200`}>
+        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900/95 backdrop-blur-lg shadow-2xl lg:shadow-none transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 border-r border-slate-700/60`}>
           <div className="p-6 h-full overflow-y-auto">
-            <nav className="space-y-1">
+            <nav className="space-y-2">
               <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Tools</h3>
               
               {[
-                { id: 'wing-calculator', name: 'Wing Calculator', icon: '🪽' },
-                { id: 'elixir-calculator', name: 'Elixir Calculator', icon: '🧪' },
-                { id: 'world-calculator', name: 'World Calculator', icon: '🌍' }
+                { id: 'wing-calculator', name: 'Wing Calculator', icon: Calculator },
+                { id: 'elixir-calculator', name: 'Elixir Calculator', icon: FlaskConical },
+                { id: 'world-calculator', name: 'World Calculator', icon: Globe }
               ].map((item) => (
                 <button
                   key={item.id}
                   onClick={() => { setActivePage(item.id); setSidebarOpen(false); }}
-                  className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-200 ${
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
                     activePage === item.id 
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm' 
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent'
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/50' 
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent hover:border-slate-700'
                   }`}
                 >
-                  <span className="text-xl">{item.icon}</span>
+                  <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
                   <span className="font-medium text-sm">{item.name}</span>
                 </button>
               ))}
@@ -313,17 +336,17 @@ function App() {
               <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-8 mb-4">Social Links</h3>
               
               {[
-                { name: 'Roblox Game', icon: '🎮', url: 'https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal' },
-                { name: 'Discord Server', icon: '💬', url: 'https://discord.com/invite/gFgcEavupb' }
+                { name: 'Roblox Game', icon: Gamepad2, url: 'https://www.roblox.com/games/18645473062/Guild-War-V35-Cultivation-Mortal-to-Immortal' },
+                { name: 'Discord Server', icon: MessageCircle, url: 'https://discord.com/invite/gFgcEavupb' }
               ].map((item) => (
                 <a
                   key={item.name}
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent transition-all duration-200"
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white border border-transparent hover:border-slate-700 transition-all duration-200 group"
                 >
-                  <span className="text-xl">{item.icon}</span>
+                  <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
                   <span className="font-medium text-sm">{item.name}</span>
                 </a>
               ))}
@@ -334,7 +357,7 @@ function App() {
         {/* Overlay for mobile */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -346,32 +369,31 @@ function App() {
           {activePage === 'wing-calculator' && (
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">Wing Calculator</h1>
-                <p className="text-slate-600">ATBM & Coefficient Wing Calculator</p>
+                <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">Wing Calculator</h1>
+                <p className="text-slate-400">ATBM & Coefficient Wing Calculator</p>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-8">
+              <div className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-500/30 rounded-2xl p-4 mb-8 shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
-                  <div className="text-yellow-600 mt-0.5">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  </div>
+                  <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="text-sm text-yellow-800 font-medium">Best way to get accurate stats of scarce wing is to trade wing to low level alts as it would give 3 decimal instead of 1 decimal</p>
+                    <p className="text-sm text-blue-200 font-medium">Best way to get accurate stats of scarce wing is to trade wing to low level alts as it would give 3 decimal instead of 1 decimal</p>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
                 {/* Max Coefficients Panel */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h2 className="text-lg font-bold text-slate-900 mb-4">Max Wing Coefficients</h2>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-blue-400" />
+                    Max Wing Coefficients
+                  </h2>
                   <div className="space-y-3">
                     {Object.entries(maxCoefficients).map(([stat, value]) => (
-                      <div key={stat} className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg border border-slate-200">
-                        <span className="font-medium text-slate-700 text-sm">{stat}</span>
-                        <span className="font-bold text-slate-900 font-mono">{value.toFixed(3)}</span>
+                      <div key={stat} className="flex justify-between items-center py-3 px-4 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                        <span className="font-medium text-slate-300 text-sm">{stat}</span>
+                        <span className="font-bold text-blue-400 font-mono text-sm">{value.toFixed(3)}</span>
                       </div>
                     ))}
                   </div>
@@ -379,39 +401,42 @@ function App() {
 
                 <div className="xl:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Coefficient Calculator */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <h2 className="text-lg font-bold text-slate-900 mb-4">Wing Coefficient Calculation</h2>
+                  <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-all duration-300">
+                    <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-blue-400" />
+                      Wing Coefficient Calculation
+                    </h2>
                     
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Wing Percentage (%)</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Wing Percentage (%)</label>
                         <input 
                           type="number" 
                           value={wingInputs.coeff.percent}
                           onChange={(e) => handleWingInputChange('coeff', 'percent', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           step="0.001"
                           placeholder="7.521"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Level</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Level</label>
                         <input 
                           type="number" 
                           value={wingInputs.coeff.level}
                           onChange={(e) => handleWingInputChange('coeff', 'level', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           placeholder="722"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Rarity Wing</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Rarity Wing</label>
                         <select 
                           value={wingInputs.coeff.rarity}
                           onChange={(e) => handleWingInputChange('coeff', 'rarity', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                         >
                           {Object.entries(wingRarityData).map(([key, data]) => (
                             <option key={key} value={key}>{data.name}</option>
@@ -420,8 +445,8 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-slate-200">
-                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg shadow-sm">
+                    <div className="mt-6 pt-4 border-t border-slate-700">
+                      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4 rounded-xl shadow-lg">
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-sm">Wing Coefficient</span>
                           <span className="text-lg font-bold font-mono">{wingResults.coefficient.toFixed(5)}</span>
@@ -431,39 +456,42 @@ function App() {
                   </div>
 
                   {/* ATBM Calculator */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <h2 className="text-lg font-bold text-slate-900 mb-4">Wing Percentage Calculation</h2>
+                  <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-all duration-300">
+                    <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-green-400" />
+                      Wing Percentage Calculation
+                    </h2>
                     
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Wing Coefficient</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Wing Coefficient</label>
                         <input 
                           type="number" 
                           value={wingInputs.atbm.coeff}
                           onChange={(e) => handleWingInputChange('atbm', 'coeff', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           step="0.00001"
                           placeholder="0.85034"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Level</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Level</label>
                         <input 
                           type="number" 
                           value={wingInputs.atbm.level}
                           onChange={(e) => handleWingInputChange('atbm', 'level', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           placeholder="722"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Rarity Wing</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">Rarity Wing</label>
                         <select 
                           value={wingInputs.atbm.rarity}
                           onChange={(e) => handleWingInputChange('atbm', 'rarity', e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                         >
                           {Object.entries(wingRarityData).map(([key, data]) => (
                             <option key={key} value={key}>{data.name}</option>
@@ -472,8 +500,8 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-slate-200">
-                      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg shadow-sm">
+                    <div className="mt-6 pt-4 border-t border-slate-700">
+                      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 rounded-xl shadow-lg">
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-sm">Final Wing Percentage</span>
                           <span className="text-lg font-bold font-mono">{wingResults.atbm.toFixed(3)}%</span>
@@ -490,53 +518,23 @@ function App() {
           {activePage === 'elixir-calculator' && (
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">Elixir Calculator</h1>
-                <p className="text-slate-600">Calculate total points and stats from your elixirs</p>
+                <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">Elixir Calculator</h1>
+                <p className="text-slate-400">Calculate total points and stats from your elixirs</p>
               </div>
 
               {/* Rarity Checkboxes */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Select Rarities</h3>
-                <div className="flex flex-wrap gap-2">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 mb-6 hover:shadow-2xl transition-shadow duration-300">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <FlaskConical className="w-5 h-5 text-purple-400" />
+                  Select Rarities
+                </h3>
+                <div className="flex flex-wrap gap-3">
                   {elixirData.rarities.map(rarity => (
-                    <label key={rarity.id} className="flex items-center space-x-2 px-3 py-2 rounded-lg border-2 cursor-pointer hover:shadow-sm transition-all text-sm font-medium"
+                    <label key={rarity.id} className="flex items-center space-x-2 px-4 py-3 rounded-xl border-2 cursor-pointer hover:shadow-lg transition-all duration-200 text-sm font-medium"
                       style={{
-                        backgroundColor: elixirChecked[rarity.id] ? 
-                          (rarity.id === 'common' ? '#f3f4f6' : 
-                           rarity.id === 'good' ? '#dcfce7' :
-                           rarity.id === 'sturdy' ? '#dbeafe' :
-                           rarity.id === 'rare' ? '#f0fdf4' :
-                           rarity.id === 'perfect' ? '#eff6ff' :
-                           rarity.id === 'scarce' ? '#faf5ff' :
-                           rarity.id === 'epic' ? '#fef3c7' :
-                           rarity.id === 'legendary' ? '#fce7f3' :
-                           rarity.id === 'immortal' ? '#ffe4e6' :
-                           rarity.id === 'myth' ? '#ffedd5' :
-                           '#fef9c3') : 'white',
-                        borderColor: elixirChecked[rarity.id] ? 
-                          (rarity.id === 'common' ? '#d1d5db' : 
-                           rarity.id === 'good' ? '#bbf7d0' :
-                           rarity.id === 'sturdy' ? '#bfdbfe' :
-                           rarity.id === 'rare' ? '#dcfce7' :
-                           rarity.id === 'perfect' ? '#dbeafe' :
-                           rarity.id === 'scarce' ? '#e9d5ff' :
-                           rarity.id === 'epic' ? '#fde68a' :
-                           rarity.id === 'legendary' ? '#fbcfe8' :
-                           rarity.id === 'immortal' ? '#fecdd3' :
-                           rarity.id === 'myth' ? '#fed7aa' :
-                           '#fef08a') : '#e5e7eb',
-                        color: elixirChecked[rarity.id] ? 
-                          (rarity.id === 'common' ? '#374151' : 
-                           rarity.id === 'good' ? '#166534' :
-                           rarity.id === 'sturdy' ? '#1e40af' :
-                           rarity.id === 'rare' ? '#15803d' :
-                           rarity.id === 'perfect' ? '#1d4ed8' :
-                           rarity.id === 'scarce' ? '#7e22ce' :
-                           rarity.id === 'epic' ? '#92400e' :
-                           rarity.id === 'legendary' ? '#be185d' :
-                           rarity.id === 'immortal' ? '#be123c' :
-                           rarity.id === 'myth' ? '#9a3412' :
-                           '#854d0e') : '#6b7280'
+                        backgroundColor: elixirChecked[rarity.id] ? `${rarity.color}20` : '#1e293b',
+                        borderColor: elixirChecked[rarity.id] ? rarity.color : '#475569',
+                        color: elixirChecked[rarity.id] ? rarity.color : '#94a3b8'
                       }}
                     >
                       <input
@@ -556,53 +554,39 @@ function App() {
                 {elixirData.rarities.map(rarity => (
                   <div 
                     key={rarity.id} 
-                    className={`bg-white rounded-2xl shadow-sm border-2 p-6 transition-all duration-300 ${
+                    className={`bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border-2 p-6 transition-all duration-300 hover:shadow-2xl ${
                       !elixirChecked[rarity.id] ? 'opacity-40' : ''
                     }`}
                     style={{
-                      borderColor: rarity.id === 'common' ? '#d1d5db' : 
-                                  rarity.id === 'good' ? '#bbf7d0' :
-                                  rarity.id === 'sturdy' ? '#bfdbfe' :
-                                  rarity.id === 'rare' ? '#dcfce7' :
-                                  rarity.id === 'perfect' ? '#dbeafe' :
-                                  rarity.id === 'scarce' ? '#e9d5ff' :
-                                  rarity.id === 'epic' ? '#fde68a' :
-                                  rarity.id === 'legendary' ? '#fbcfe8' :
-                                  rarity.id === 'immortal' ? '#fecdd3' :
-                                  rarity.id === 'myth' ? '#fed7aa' :
-                                  '#fef08a'
+                      borderColor: elixirChecked[rarity.id] ? rarity.color : '#475569'
                     }}
                   >
-                    <h4 className="text-lg font-bold mb-4 pb-3 border-b border-slate-200" style={{
-                      color: rarity.id === 'common' ? '#374151' : 
-                            rarity.id === 'good' ? '#166534' :
-                            rarity.id === 'sturdy' ? '#1e40af' :
-                            rarity.id === 'rare' ? '#15803d' :
-                            rarity.id === 'perfect' ? '#1d4ed8' :
-                            rarity.id === 'scarce' ? '#7e22ce' :
-                            rarity.id === 'epic' ? '#92400e' :
-                            rarity.id === 'legendary' ? '#be185d' :
-                            rarity.id === 'immortal' ? '#be123c' :
-                            rarity.id === 'myth' ? '#9a3412' :
-                            '#854d0e'
+                    <h4 className="text-lg font-bold mb-4 pb-3 border-b border-slate-700" style={{
+                      color: elixirChecked[rarity.id] ? rarity.color : '#94a3b8'
                     }}>
                       {rarity.name} Elixirs
                     </h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                      {elixirData.stats.map(stat => (
-                        <div key={stat.id}>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">{stat.name}</label>
-                          <input
-                            type="number"
-                            value={elixirQuantities[`${rarity.id}-${stat.id}`] || ''}
-                            onChange={(e) => handleElixirQuantityChange(rarity.id, stat.id, e.target.value)}
-                            disabled={!elixirChecked[rarity.id]}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed transition-all text-sm"
-                            min="0"
-                            placeholder="0"
-                          />
-                        </div>
-                      ))}
+                      {elixirData.stats.map(stat => {
+                        const IconComponent = stat.icon;
+                        return (
+                          <div key={stat.id}>
+                            <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
+                              <IconComponent className="w-4 h-4" />
+                              {stat.name}
+                            </label>
+                            <input
+                              type="number"
+                              value={elixirQuantities[`${rarity.id}-${stat.id}`] || ''}
+                              onChange={(e) => handleElixirQuantityChange(rarity.id, stat.id, e.target.value)}
+                              disabled={!elixirChecked[rarity.id]}
+                              className="w-full px-3 py-2.5 border border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:bg-slate-900/50 disabled:cursor-not-allowed transition-all text-sm shadow-sm bg-slate-900/50 text-white"
+                              min="0"
+                              placeholder="0"
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -611,33 +595,47 @@ function App() {
               {/* Totals */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 {/* Points Total */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Total Points</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-blue-400" />
+                    Total Points
+                  </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {elixirData.stats.map(stat => (
-                      <div key={stat.id} className="text-center">
-                        <div className="text-sm text-slate-600 mb-2">{stat.name}</div>
-                        <div className="text-xl font-bold text-blue-600">{formatStatNumber(pointTotals[stat.id] || 0)}</div>
-                      </div>
-                    ))}
+                    {elixirData.stats.map(stat => {
+                      const IconComponent = stat.icon;
+                      return (
+                        <div key={stat.id} className="text-center p-3 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                          <IconComponent className="w-6 h-6 text-slate-400 mx-auto mb-2" />
+                          <div className="text-sm text-slate-400 mb-2">{stat.name}</div>
+                          <div className="text-xl font-bold text-blue-400">{formatStatNumber(pointTotals[stat.id] || 0)}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Absorb Stats Total */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Total Absorb Stats</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-green-400" />
+                    Total Absorb Stats
+                  </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {elixirData.stats.map(stat => (
-                      <div key={stat.id} className="text-center">
-                        <div className="text-sm text-slate-600 mb-2">{stat.name}</div>
-                        <div className="text-lg font-bold text-green-600">
-                          {stat.isPercentage 
-                            ? `${((absorbTotals[stat.id] || 0)).toFixed(stat.decimals)}%`
-                            : formatStatNumber(absorbTotals[stat.id] || 0)
-                          }
+                    {elixirData.stats.map(stat => {
+                      const IconComponent = stat.icon;
+                      return (
+                        <div key={stat.id} className="text-center p-3 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                          <IconComponent className="w-6 h-6 text-slate-400 mx-auto mb-2" />
+                          <div className="text-sm text-slate-400 mb-2">{stat.name}</div>
+                          <div className="text-lg font-bold text-green-400">
+                            {stat.isPercentage 
+                              ? `${((absorbTotals[stat.id] || 0)).toFixed(stat.decimals)}%`
+                              : formatStatNumber(absorbTotals[stat.id] || 0)
+                            }
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -648,21 +646,24 @@ function App() {
           {activePage === 'world-calculator' && (
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">World Rate Calculator</h1>
-                <p className="text-slate-600">Calculate your farming rate per hour</p>
+                <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">World Rate Calculator</h1>
+                <p className="text-slate-400">Calculate your farming rate per hour</p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* World Selection */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">World Selection</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-green-400" />
+                    World Selection
+                  </h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Difficulty</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">Difficulty</label>
                       <select 
                         value={worldInputs.difficulty}
                         onChange={(e) => handleWorldInputChange('difficulty', e.target.value)}
-                        className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                        className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                       >
                         {Object.keys(worldData).map(difficulty => (
                           <option key={difficulty} value={difficulty}>{difficulty}</option>
@@ -670,11 +671,11 @@ function App() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">World</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-2">World</label>
                       <select 
                         value={worldInputs.world}
                         onChange={(e) => handleWorldInputChange('world', e.target.value)}
-                        className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                        className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                       >
                         {availableWorlds.map(world => (
                           <option key={world.id} value={world.id}>{world.name}</option>
@@ -685,34 +686,40 @@ function App() {
                 </div>
 
                 {/* Base Stats */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Base Stats</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-blue-400" />
+                    Base Stats
+                  </h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
-                      <span className="font-medium text-slate-700 text-sm">Exp / Clear</span>
-                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.xp.toLocaleString('id-ID')}</span>
+                    <div className="flex justify-between items-center p-3 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                      <span className="font-medium text-slate-300 text-sm">Exp / Clear</span>
+                      <span className="font-bold text-white text-sm">{worldResults.baseStats.xp.toLocaleString('id-ID')}</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
-                      <span className="font-medium text-slate-700 text-sm">Ore / Drop</span>
-                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.ore.toLocaleString('id-ID')}</span>
+                    <div className="flex justify-between items-center p-3 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                      <span className="font-medium text-slate-300 text-sm">Ore / Drop</span>
+                      <span className="font-bold text-white text-sm">{worldResults.baseStats.ore.toLocaleString('id-ID')}</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">
-                      <span className="font-medium text-slate-700 text-sm">Gold / Clear</span>
-                      <span className="font-bold text-slate-900 text-sm">{worldResults.baseStats.coins.toLocaleString('id-ID')}</span>
+                    <div className="flex justify-between items-center p-3 bg-slate-900/50 rounded-xl border border-slate-700/50 hover:bg-slate-900/80 transition-colors duration-200">
+                      <span className="font-medium text-slate-300 text-sm">Gold / Clear</span>
+                      <span className="font-bold text-white text-sm">{worldResults.baseStats.coins.toLocaleString('id-ID')}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Clear Time */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Clear Time</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-cyan-400" />
+                    Clear Time
+                  </h3>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Clear Time (seconds)</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Clear Time (seconds)</label>
                     <input
                       type="number"
                       value={worldInputs.clearTime}
                       onChange={(e) => handleWorldInputChange('clearTime', e.target.value)}
-                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                      className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                       min="0"
                       placeholder="60"
                     />
@@ -720,8 +727,11 @@ function App() {
                 </div>
 
                 {/* Drop Buff Adjustment */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Drop Buff Adjustment</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-purple-400" />
+                    Drop Buff Adjustment
+                  </h3>
                   <div className="space-y-4">
                     {[
                       { id: 'goldDropRate', label: 'Gold Drop Rate (%)', min: 100 },
@@ -729,12 +739,12 @@ function App() {
                       { id: 'expGainRate', label: 'Exp Gain Rate (%)', min: 100 }
                     ].map(field => (
                       <div key={field.id}>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">{field.label}</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">{field.label}</label>
                         <input
                           type="number"
                           value={worldInputs[field.id]}
                           onChange={(e) => handleWorldInputChange(field.id, e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           min={field.min}
                         />
                       </div>
@@ -743,20 +753,23 @@ function App() {
                 </div>
 
                 {/* Extra Drop Adjustment */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4">Extra Drop Adjustment</h3>
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-yellow-400" />
+                    Extra Drop Adjustment
+                  </h3>
                   <div className="space-y-4">
                     {[
                       { id: 'goldExtraDrop', label: 'Extra Gold Drop' },
                       { id: 'expExtraDrop', label: 'Extra Exp Drop' }
                     ].map(field => (
                       <div key={field.id}>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">{field.label}</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">{field.label}</label>
                         <input
                           type="number"
                           value={worldInputs[field.id]}
                           onChange={(e) => handleWorldInputChange(field.id, e.target.value)}
-                          className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white text-sm"
+                          className="w-full px-4 py-3 border border-slate-600 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-slate-900/50 text-white text-sm shadow-sm"
                           min="0"
                           placeholder="0"
                         />
@@ -766,24 +779,34 @@ function App() {
                 </div>
 
                 {/* Results */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-sm p-6 text-white">
-                  <h3 className="text-lg font-bold mb-4">Results Per Hour</h3>
+                <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-2xl shadow-2xl p-6 text-white hover:shadow-3xl transition-shadow duration-300">
+                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <Calculator className="w-5 h-5" />
+                    Results Per Hour
+                  </h3>
                   <div className="space-y-3">
                     {[
-                      { label: 'Exp / Hour', value: worldResults.xpHour.toLocaleString('id-ID'), color: 'text-green-200' },
-                      { label: 'Ore / Hour', value: worldResults.oreHour.toLocaleString('id-ID'), color: 'text-yellow-200' },
-                      { label: 'Gold / Hour', value: worldResults.coinsHour.toLocaleString('id-ID'), color: 'text-yellow-200' },
-                      { label: 'Clears / Hour', value: worldResults.clearsHour, color: 'text-blue-200' }
-                    ].map((item, index) => (
-                      <div key={index} className="flex justify-between items-center py-1">
-                        <span className="font-medium text-sm">{item.label}</span>
-                        <span className={`text-base font-bold font-mono ${item.color}`}>{item.value}</span>
-                      </div>
-                    ))}
+                      { label: 'Exp / Hour', value: worldResults.xpHour.toLocaleString('id-ID'), icon: TrendingUp },
+                      { label: 'Ore / Hour', value: worldResults.oreHour.toLocaleString('id-ID'), icon: Gem },
+                      { label: 'Gold / Hour', value: worldResults.coinsHour.toLocaleString('id-ID'), icon: Coins },
+                      { label: 'Clears / Hour', value: worldResults.clearsHour, icon: Clock }
+                    ].map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div key={index} className="flex justify-between items-center py-2 px-3 bg-white/20 rounded-lg backdrop-blur-sm hover:bg-white/30 transition-colors duration-200">
+                          <div className="flex items-center gap-2">
+                            <IconComponent className="w-4 h-4" />
+                            <span className="font-medium text-sm">{item.label}</span>
+                          </div>
+                          <span className="text-base font-bold font-mono">{item.value}</span>
+                        </div>
+                      );
+                    })}
                     <button 
                       onClick={addToCompare}
-                      className="w-full mt-4 bg-white text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-sm text-sm"
+                      className="w-full mt-4 bg-white text-green-700 py-3 rounded-xl font-semibold hover:bg-green-50 transition-all duration-200 shadow-lg hover:shadow-xl text-sm flex items-center justify-center gap-2"
                     >
+                      <BarChart3 className="w-4 h-4" />
                       Add to Compare
                     </button>
                   </div>
@@ -792,37 +815,50 @@ function App() {
 
               {/* Comparison Table */}
               {comparisonData.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm p-6 mt-6 border border-slate-200">
+                <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl p-6 mt-6 border border-slate-700/50 hover:shadow-2xl transition-shadow duration-300">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-bold text-slate-900">World Comparison</h3>
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-green-400" />
+                      World Comparison
+                    </h3>
                     <button 
                       onClick={clearCompare}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium shadow-sm text-sm"
+                      className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium shadow-md text-sm flex items-center gap-2"
                     >
+                      <X className="w-4 h-4" />
                       Clear All
                     </button>
                   </div>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto rounded-xl border border-slate-700">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b-2 border-slate-200">
-                          <th className="text-left py-3 font-semibold text-slate-700">World</th>
-                          <th className="text-left py-3 font-semibold text-slate-700">Exp/Hour</th>
-                          <th className="text-left py-3 font-semibold text-slate-700">Ore/Hour</th>
-                          <th className="text-left py-3 font-semibold text-slate-700">Gold/Hour</th>
-                          <th className="text-left py-3 font-semibold text-slate-700">Clears/Hour</th>
-                          <th className="text-left py-3 font-semibold text-slate-700">Clear Time</th>
+                        <tr className="bg-slate-900/50 border-b-2 border-slate-700">
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">World</th>
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">Exp/Hour</th>
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">Ore/Hour</th>
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">Gold/Hour</th>
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">Clears/Hour</th>
+                          <th className="text-left py-4 px-4 font-semibold text-slate-300">Clear Time</th>
+                          <th className="text-center py-4 px-4 font-semibold text-slate-300">Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         {comparisonData.map((data, index) => (
-                          <tr key={index} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                            <td className="py-3 text-slate-900 font-medium">{data.name}</td>
-                            <td className="py-3 font-mono text-slate-700">{data.xp.toLocaleString('id-ID')}</td>
-                            <td className="py-3 font-mono text-slate-700">{data.ore.toLocaleString('id-ID')}</td>
-                            <td className="py-3 font-mono text-slate-700">{data.coins.toLocaleString('id-ID')}</td>
-                            <td className="py-3 font-mono text-slate-700">{data.clears}</td>
-                            <td className="py-3 font-mono text-slate-700">{data.clearTime}s</td>
+                          <tr key={index} className="border-b border-slate-700 hover:bg-slate-900/30 transition-colors duration-150">
+                            <td className="py-3 px-4 text-white font-medium">{data.name}</td>
+                            <td className="py-3 px-4 font-mono text-slate-300">{data.xp.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-4 font-mono text-slate-300">{data.ore.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-4 font-mono text-slate-300">{data.coins.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-4 font-mono text-slate-300">{data.clears}</td>
+                            <td className="py-3 px-4 font-mono text-slate-300">{data.clearTime}s</td>
+                            <td className="py-3 px-4 text-center">
+                              <button
+                                onClick={() => removeFromCompare(index)}
+                                className="px-3 py-1 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/40 transition-all duration-200 text-xs font-medium border border-red-500/30"
+                              >
+                                Remove
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
